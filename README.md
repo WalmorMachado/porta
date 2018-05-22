@@ -1,10 +1,11 @@
 # porta
-Controle de Acesso usando RFID
 
-Estado de aproximação
-Leitura
-Armazenamento de variável
-Comparação
+Controle de Acesso usando RFID 
+
+Estado de aproximação -> 
+Leitura ->
+Armazenamento de variável ->
+Comparação ->
 'permitido
   motor
   led verde
