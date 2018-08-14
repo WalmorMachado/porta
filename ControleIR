@@ -1,0 +1,82 @@
+// Programa : Teste Controle Remoto IR
+// Autor : Arduino e Cia
+
+#include <IRremote.h>
+
+int RECV_PIN = 11;
+int armazenavalor;
+int pinoledvermelho = 5;
+int pinoledverde = 7;
+int pinoledamarelo = 9;
+int e;
+IRrecv irrecv(RECV_PIN);
+decode_results results;
+
+void setup()
+{
+  pinMode(pinoledvermelho, OUTPUT);
+  pinMode(pinoledverde, OUTPUT);
+  pinMode(pinoledamarelo, OUTPUT);
+  Serial.begin(9600);
+  irrecv.enableIRIn(); // Inicializa o receptor IR
+}
+
+void loop()
+{
+  if (irrecv.decode(&results))
+  {
+    Serial.print("Valor lido : ");
+    Serial.println(results.value, HEX);
+    armazenavalor = (results.value);
+    e = armazenavalor;
+
+    {
+      switch (armazenavalor) {
+        case 0xFF30CF: //1
+          digitalWrite(pinoledvermelho, HIGH);  //Acende o led vermelho
+          digitalWrite(pinoledamarelo, HIGH);
+          digitalWrite(pinoledverde, HIGH);
+          break;
+        case 0xFF52AD: //9
+          digitalWrite(pinoledvermelho, LOW); //Apaga todos os leds
+          digitalWrite(pinoledverde, LOW);
+          digitalWrite(pinoledamarelo, LOW);
+          break;
+        case 0xFF18E7://2
+          digitalWrite(pinoledvermelho, HIGH); //Apaga todos os leds
+          digitalWrite(pinoledverde, LOW);
+          digitalWrite(pinoledamarelo, LOW);
+          break;
+        case 0xFF7A85 ://
+          digitalWrite(pinoledvermelho, LOW); //Apaga todos os leds
+          digitalWrite(pinoledverde, HIGH);
+          digitalWrite(pinoledamarelo, LOW);
+          break;
+        case 0xFF10EF ://
+          digitalWrite(pinoledvermelho, LOW); //Apaga todos os leds
+          digitalWrite(pinoledverde, LOW);
+          digitalWrite(pinoledamarelo, HIGH);
+          break;
+        case 0xFFC23D:
+          do {
+            digitalWrite(pinoledverde, LOW);
+
+            digitalWrite(pinoledvermelho, HIGH);
+            delay(500);
+            digitalWrite(pinoledamarelo, HIGH);
+            digitalWrite(pinoledvermelho, LOW);
+            delay(500);
+            digitalWrite(pinoledverde, HIGH);
+            digitalWrite(pinoledamarelo, LOW);
+            delay(500);
+          }
+          while (e < 2);
+          break;
+
+        default:
+          break;
+      }
+      irrecv.resume(); //Le o próximo valor
+    }
+  }
+}
